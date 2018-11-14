@@ -1,0 +1,8 @@
+--- 
+- name: Deploy /tmp/system_info file
+  hosts: all:!controllers
+  tasks: 
+      - name: Deploy /tmp/system_info
+        template:
+            src: system_info.j2 
+            dest: /tmp/system_info
