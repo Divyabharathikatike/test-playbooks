@@ -1,0 +1,10 @@
+---
+- hosts: all
+  sudo: yes
+  serial: 1
+  tasks:
+   - name: Update
+     yum: name='*' state=latest
+     notify: reboot
+   - handler: reboot
+     command: '/sbin/shutdown -r now'
