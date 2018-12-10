@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  become: true
+  tasks:
+  - name: Copy file to S3 bucket
+    s3: aws_access_key=<AccessKey> aws_secret_key=<Secret Key> bucket=ansibleniru object=/niru.txt src=/home/ansible/niru.txt mode=put
