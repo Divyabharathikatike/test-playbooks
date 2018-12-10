@@ -1,0 +1,38 @@
+---
+- name: Setup and connect network shared folders
+  hosts: Linux
+  become: yes
+  gather_facts: yes
+  tasks:
+    - name: Install the dependencies to for archiving the 
+      backup
+      package: 
+         name: '{{ item }}'
+         state: latest
+      with_items:
+         - zip
+         - unzip
+         - gunzip
+         - gzip
+         - bzip2
+         - rsync
+
+    - name: Backup the client folder to the vault 
+      datastore server
+      synchronize:
+         mode: push 
+         src: /home/client1
+         dest: client@vault.lab.edu:/media/vault1/client1
+         archive: yes
+         copy_links: yes
+         delete: no
+         compress: yes
+         recursive: yes
+         checksum: yes
+         links: yes
+         owner: yes
+         perms: yes
+         times: yes
+         set_remote_user: yes
+         private_key: /home/admin/users_SSH_Keys/id_rsa
+      delegate_to: "{{ inventory_hostname }}"
