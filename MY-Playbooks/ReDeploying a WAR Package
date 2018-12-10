@@ -1,0 +1,52 @@
+## in Continuous Delivery where I am deploying a new build of my J2EE application (WAR file) to tomcat my steps would be as follows:
+
+## 1 Stop the application
+## 2 Uninstall the application
+## 3 Deploy the new build of an application
+## 4 Start the application
+
+########Create the main list of all tasks###############
+############tasks/main.yml##########
+## ---
+# tasks file for tomcat
+#- import_tasks: stop_app.yml
+#- import_tasks: uninstall_app.yml
+#- import_tasks: deploy_app.yml
+#- import_tasks: start_app.yml
+
+
+####Create all the 4 files as per the scenario####
+###tasks/stop_app.yml file###
+---
+- name: Gather EC2 instance metadata
+  action: ec2_facts
+
+- name: Stop application on {{ansible_hostname}}
+  command: wget "http://{{tomcat_user}}:{{tomcat_pwd}}@{{ansible_ec2_public_ipv4}}:8080/manager/text/stop?path=/HelloWorld-Maven" -O - -q
+   
+   ### tasks/uninstall_app.yml
+---
+- name: Gather EC2 instance metadata
+  action: ec2_facts
+
+- name: Undeploy application on {{ansible_hostname}}
+  command: wget "http://{{tomcat_user}}:{{tomcat_pwd}}@{{ansible_ec2_public_ipv4}}:8080/manager/text/undeploy?path=/HelloWorld-Maven" -O - -q
+
+##tasks/deploy_app.yml
+---
+- name: Deploy the new WAR file to target servers
+  copy: src=/var/lib/jenkins/workspace/Demo-Maven-Project/target/HelloWorld-Maven.war dest=/home/ansible/tomcat/webapps
+  
+#######task/start_app.yml
+
+---
+- name: Gather EC2 instance metadata
+  action: ec2_facts
+
+- name: Start application on {{ansible_hostname}}
+  command: wget "http://{{tomcat_user}}:{{tomcat_pwd}}@{{ansible_ec2_public_ipv4}}:8080/manager/text/start?path=/HelloWorld-Maven" -O - -q
+  
+  
+  
+  
+  
