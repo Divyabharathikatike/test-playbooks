@@ -4,6 +4,6 @@
   tasks:
   - name: Ansible zip file example
     archive:
-     path: /home/ansible/niranjan.txt
-     dest: /home/ansible/niranjan.zip
+     path: /home/ansible/divya.txt
+     dest: /home/ansible/divya.zip
      format: zip
